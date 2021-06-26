@@ -5,23 +5,23 @@ import java.sql.*;
 public class Main {
 
     public static void main( String args[] ) {
-        Connection c = null;
-        Statement stmt = null;
+        Connection c = null; // соединение
+        Statement stmt = null; // поток работы с БД
 
         try {
-            Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection("jdbc:sqlite:test.db");
-            c.setAutoCommit(false);
+            Class.forName("org.sqlite.JDBC"); // формат работы бд
+            c = DriverManager.getConnection("jdbc:sqlite:test.db"); // сама бд, подключение к файлу
+            c.setAutoCommit(false); // отключение авто сохронения
             System.out.println("Открытие бд, успех!");
 
-            stmt = c.createStatement();
-            String sql = "DELETE from COMPANY where ID=2;";
+            stmt = c.createStatement(); // бд в поток
+            String sql = "DELETE from COMPANY where ID=2;"; // Удаление по запросу sql
             stmt.executeUpdate(sql);
             c.commit();
 
-            ResultSet rs = stmt.executeQuery( "SELECT * FROM COMPANY;" );
+            ResultSet rs = stmt.executeQuery( "SELECT * FROM COMPANY;" ); // выборка по запросу sql
 
-            while ( rs.next() ) {
+            while ( rs.next() ) { // пока не закончилась, доставать данные и выводить на экран
                 int id = rs.getInt("id");
                 String  name = rs.getString("name");
                 int age  = rs.getInt("age");
@@ -35,11 +35,11 @@ public class Main {
                 System.out.println( "SALARY = " + salary );
                 System.out.println();
             }
-            rs.close();
+            rs.close(); // закрытие
             stmt.close();
             c.close();
         } catch ( Exception e ) {
-            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+            System.err.println( e.getClass().getName() + ": " + e.getMessage() ); // ошибка
             System.exit(0);
         }
         System.out.println("Удаление данных, успех!");
